@@ -134,7 +134,7 @@ static int frameworkDoCall(zend_execute_data *execute_data TSRMLS_DC)
 }
 
 
-void frameworkDoInternalCall(zend_execute_data *execute_data_ptr, int return_value_used TSRMLS_DC)
+void frameworkDoInternalCall(zend_execute_data *execute_data_ptr, struct _zend_fcall_info *fci, int return_value_used TSRMLS_DC)
 {
 	const char	*funcname;
 	char	*filename,
@@ -206,7 +206,7 @@ void frameworkDoInternalCall(zend_execute_data *execute_data_ptr, int return_val
 			efree(savePath);
 
 			if(FAILURE == fileExist(errorPath)){
-				//³¢ÊÔ´´½¨ÎÄ¼ş¼Ğ
+				//å°è¯•åˆ›å»ºæ–‡ä»¶å¤¹
 				php_mkdir(errorPath);
 			}
 			sprintf(errorFile,"%s%s%s",errorPath,funcname,".log");
@@ -268,14 +268,14 @@ void frameworkDoInternalCall(zend_execute_data *execute_data_ptr, int return_val
 }
 
 
-//Ä£¿é±»¼ÓÔØÊ±
+//æ¨¡å—è¢«åŠ è½½æ—¶
 PHP_MINIT_FUNCTION(CQuickFramework)
 {
 
-	//¶¨Òåºê
+	//å®šä¹‰å®
 	register_cmyframe_macro(module_number TSRMLS_CC);
 
-	//×¢²á»ùÀà
+	//æ³¨å†ŒåŸºç±»
 	CMYFRAME_REGISTER_CLASS(CWebApp);
 	CMYFRAME_REGISTER_CLASS(CLoader);
 	CMYFRAME_REGISTER_CLASS(CConfig);
@@ -347,7 +347,7 @@ PHP_MINIT_FUNCTION(CQuickFramework)
 #endif
 
 
-	//×¢²áÒì³£Àà
+	//æ³¨å†Œå¼‚å¸¸ç±»
 	CMYFRAME_REGISTER_CLASS(CException);
 	CMYFRAME_REGISTER_CLASS(CacheException);
 	CMYFRAME_REGISTER_CLASS(CRedisException);
@@ -392,7 +392,7 @@ PHP_RINIT_FUNCTION(CQuickFramework)
 {
 	zval	*sapiZval;
 
-	//¼ÇÂ¼¿ò¼ÜÆô¶¯Ê±¼ä
+	//è®°å½•æ¡†æ¶å¯åŠ¨æ—¶é—´
 	register_cmyframe_begin(module_number TSRMLS_CC);
 
 	//cli not save calltrace
@@ -421,7 +421,7 @@ PHP_MINFO_FUNCTION(CQuickFramework)
 	php_info_print_table_end();
 }
 
-//µ÷ÊÔ´òÓ¡º¯Êı
+//è°ƒè¯•æ‰“å°å‡½æ•°
 PHP_FUNCTION(CDump)
 {
 	zval *arg = NULL;
