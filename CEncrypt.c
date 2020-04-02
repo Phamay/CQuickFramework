@@ -31,14 +31,14 @@
 #include "php_CException.h"
 
 
-//zendÀà·½·¨
+//zendç±»æ–¹æ³•
 zend_function_entry CEncrypt_functions[] = {
 	PHP_ME(CEncrypt,AesDecode,NULL,ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
 	PHP_ME(CEncrypt,AesEncode,NULL,ZEND_ACC_PUBLIC | ZEND_ACC_STATIC)
 	{NULL, NULL, NULL}
 };
 
-//Ä£¿é±»¼ÓÔØÊ±
+//æ¨¡å—è¢«åŠ è½½æ—¶
 CMYFRAME_REGISTER_CLASS_RUN(CEncrypt)
 {
 	zend_class_entry funCe;
@@ -105,13 +105,13 @@ void CEncrypt_AesEncode(char *val,char *key,zval **returnObjectZval TSRMLS_DC){
 		sizeObject = &sizeObjectReturn;
 	MODULE_END
 
-	//Èç¹û²»Îª¿Õ
+	//å¦‚æœä¸ä¸ºç©º
 	if(IS_LONG != Z_TYPE_P(sizeObject)){
 		zval_dtor(&sizeObjectReturn);
 		return;
 	}
 
-	//¼ÆËãpkcspad
+	//è®¡ç®—pkcspad
 	pkcs5_pad(val,Z_LVAL_P(sizeObject),&paddingInput);
 
 	//mcrypt_module_open
@@ -178,7 +178,7 @@ void CEncrypt_AesEncode(char *val,char *key,zval **returnObjectZval TSRMLS_DC){
 		paramsList[1] = &params2;
 		MAKE_STD_ZVAL(paramsList[0]);
 		MAKE_STD_ZVAL(paramsList[1]);
-		ZVAL_ZVAL(paramsList[0],ivSizeObject,1,0)
+		ZVAL_ZVAL(paramsList[0],ivSizeObject,1,0);
 		ZVAL_LONG(paramsList[1],2);
 		INIT_ZVAL(constructVal);
 		ZVAL_STRING(&constructVal,"mcrypt_create_iv", 0);
@@ -240,7 +240,7 @@ void CEncrypt_AesEncode(char *val,char *key,zval **returnObjectZval TSRMLS_DC){
 
 	ZVAL_ZVAL(*returnObjectZval,dataObject,1,0);
 
-	//¹Ø±Õ×ÊÔ´ mcrypt_generic_deinit
+	//å…³é—­èµ„æº mcrypt_generic_deinit
 	MODULE_BEGIN
 		zval	constructVal,
 				returnObject,
@@ -273,7 +273,7 @@ void CEncrypt_AesEncode(char *val,char *key,zval **returnObjectZval TSRMLS_DC){
 	MODULE_END
 
 
-	//Ïú»ÙµÄ±äÁ¿
+	//é”€æ¯çš„å˜é‡
 	efree(paddingInput);
 	zval_dtor(&sizeObjectReturn);
 	zval_dtor(&tdObjectReturn);
@@ -283,7 +283,7 @@ void CEncrypt_AesEncode(char *val,char *key,zval **returnObjectZval TSRMLS_DC){
 }
 
 
-//aes¼ÓÃÜ
+//aesåŠ å¯†
 PHP_METHOD(CEncrypt,AesEncode)
 {
 	char	*key,
@@ -316,7 +316,7 @@ void CEncrypt_AesDecode(zval *val,char *key,zval **returnObjectZval TSRMLS_DC)
 	MAKE_STD_ZVAL(*returnObjectZval);
 	ZVAL_NULL(*returnObjectZval);
 
-	//µ÷ÓÃmcrypt_decrypt
+	//è°ƒç”¨mcrypt_decrypt
 	MODULE_BEGIN
 		zval	constructVal,
 				*paramsList[4],
@@ -348,7 +348,7 @@ void CEncrypt_AesDecode(zval *val,char *key,zval **returnObjectZval TSRMLS_DC)
 		decodeObject = &decodeReturn;
 	MODULE_END
 
-	//Ê§°Ü
+	//å¤±è´¥
 	if(IS_STRING != Z_TYPE_P(decodeObject)){
 		zval_dtor(&decodeReturn);
 		return;
@@ -356,17 +356,17 @@ void CEncrypt_AesDecode(zval *val,char *key,zval **returnObjectZval TSRMLS_DC)
 
 	resultString = estrdup(Z_STRVAL_P(decodeObject));
 
-	//È¡Ä©Î²Ò»Î»
+	//å–æœ«å°¾ä¸€ä½
 	lastChar = resultString[strlen(resultString)-1];
 
-	//½«Æä×ªÎªasciiÂë
+	//å°†å…¶è½¬ä¸ºasciiç 
 	lastAscii = (int)lastChar;
 
 	substr(resultString,0,0 - lastAscii,&returnString);
 
 	ZVAL_STRING(*returnObjectZval,returnString,1);
 
-	//Ïú»Ù
+	//é”€æ¯
 	zval_dtor(&decodeReturn);
 	efree(resultString);
 	efree(returnString);
