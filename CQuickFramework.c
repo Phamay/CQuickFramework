@@ -264,7 +264,7 @@ void frameworkDoInternalCall(zend_execute_data *execute_data_ptr, struct _zend_f
 
 	efree(filename);
 
-	execute_internal(execute_data_ptr, return_value_used TSRMLS_CC);
+	execute_internal(execute_data_ptr, fci, return_value_used TSRMLS_CC);
 }
 
 
